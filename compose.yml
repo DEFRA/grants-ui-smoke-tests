@@ -8,24 +8,14 @@
 # Both mongo and localstack have init scripts included for setting up resources
 # on startup. These scripts are in docker/scripts.
 #
-# It also includes a selenium-chrome container for running the browser headless.
-#
 # The services being tested can either be started up here using the latest
 # builds from dockerhub.
 # In the example each service has a .env config file in docker/config/
 # Services can reference each other by their container names.
-# e.g. http://cdp-example-node-backend:3001/
+# e.g. http://grants-ui-backend:3001/
 #
 ################################################################################
 services:
-
-################################################################################
-# Headless browser, used by the test suite to actually run the tests against the
-# containers.
-  selenium-chrome:
-    image: selenium/standalone-chrome:123.0
-    ports:
-      - 4444:4444
 
 ################################################################################
   mongodb:
@@ -70,15 +60,15 @@ services:
 # Add the services you want to test below.
 #
 ################################################################################
-#  cdp-example-node-frontend:
-#    image: defradigital/cdp-example-node-frontend:${CDP_EXAMPLE_NODE_FRONTEND:-latest}
+#  grants-ui:
+#    image: defradigital/grants-ui:${GRANTS_UI:-latest}
 #    env_file:
 #      - ./docker/config/defaults.env
 #      - ./docker/config/example-frontend.env
 #    environment:
 #      - PORT=3000
 #    depends_on:
-#      cdp-example-node-backend:
+#      grants-ui-backend:
 #        condition: service_started
 #      redis:
 #        condition: service_healthy
@@ -91,18 +81,18 @@ services:
 #      retries: 3
 
 ################################################################################
-# cdp-example-node-backend:
-#   image: defradigital/cdp-example-node-backend:${CDP_EXAMPLE_NODE_BACKEND:-latest}
-#   env_file:
-#     - ./docker/config/defaults.env
-#     - ./docker/config/example-backend.env
-#   environment:
-#     - PORT=3001
-#   depends_on:
-#     mongodb:
-#       condition: service_healthy
-#   healthcheck:
-#     test: ["CMD", "curl", "http://localhost:3001/health"]
-#     interval: 3s
-#     start_period: 2s
-#     retries: 3
+#  grants-ui-backend:
+#    image: defradigital/grants-ui-backend:${GRANTS_UI_BACKEND:-latest}
+#    env_file:
+#      - ./docker/config/defaults.env
+#      - ./docker/config/example-backend.env
+#    environment:
+#      - PORT=3001
+#    depends_on:
+#      mongodb:
+#        condition: service_healthy
+#    healthcheck:
+#      test: ["CMD", "curl", "http://localhost:3001/health"]
+#      interval: 3s
+#      start_period: 2s
+#      retries: 3
