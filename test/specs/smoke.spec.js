@@ -21,6 +21,13 @@ test.describe('Smoke test', () => {
       await page.getByRole('button', { name: 'Start now' }).click()
     })
 
+    await test.step('check-details', async () => {
+      await expect(page).toHaveURL('/example-grant-with-auth/check-details')
+      await expect(page.getByRole('heading', { level: 1 })).toContainText('Check your details')
+      await page.getByRole('radio', { name: 'Yes' }).click()
+      await page.getByRole('button', { name: 'Continue' }).click()
+    })
+
     await test.step('yes-no-field', async () => {
       await expect(page).toHaveURL('/example-grant-with-auth/yes-no-field')
       await expect(page.getByRole('heading', { level: 1 })).toContainText('YesNoField Example')
@@ -51,10 +58,17 @@ test.describe('Smoke test', () => {
       await page.getByRole('button', { name: 'Continue' }).click()
     })
 
-    await test.step('number-field', async () => {
-      await expect(page).toHaveURL('/example-grant-with-auth/number-field')
-      await expect(page.getByRole('heading', { level: 1 })).toContainText('NumberField Example')
+    await test.step('number-field-validation', async () => {
+      await expect(page).toHaveURL('/example-grant-with-auth/number-field-validation')
+      await expect(page.getByRole('heading', { level: 1 })).toContainText('NumberField with validation')
       await page.getByLabel('Enter amount').fill('100000')
+      await page.getByRole('button', { name: 'Continue' }).click()
+    })
+
+    await test.step('number-field-routing', async () => {
+      await expect(page).toHaveURL('/example-grant-with-auth/number-field-routing')
+      await expect(page.getByRole('heading', { level: 1 })).toContainText('NumberField with conditional routing')
+      await page.getByLabel('Enter amount that may divert the journey').fill('50000')
       await page.getByRole('button', { name: 'Continue' }).click()
     })
 
@@ -86,7 +100,66 @@ test.describe('Smoke test', () => {
     await test.step('multiline-text-field', async () => {
       await expect(page).toHaveURL('/example-grant-with-auth/multiline-text-field')
       await expect(page.getByRole('heading', { level: 1 })).toContainText('MultilineTextField Example')
-      await page.getByLabel('MultilineTextField Example').fill('Lorem ipsum')
+      await page.locator('textarea').fill('Lorem ipsum')
+      await page.getByRole('button', { name: 'Continue' }).click()
+    })
+
+    await test.step('email-address-field', async () => {
+      await expect(page).toHaveURL('/example-grant-with-auth/email-address-field')
+      await expect(page.getByRole('heading', { level: 1 })).toContainText('EmailAddressField Example')
+      await page.locator('input[type="email"]').fill('test@example.com')
+      await page.getByRole('button', { name: 'Continue' }).click()
+    })
+
+    await test.step('telephone-number-field', async () => {
+      await expect(page).toHaveURL('/example-grant-with-auth/telephone-number-field')
+      await expect(page.getByRole('heading', { level: 1 })).toContainText('TelephoneNumberField Example')
+      await page.locator('input[type="tel"]').fill('01234 567890')
+      await page.getByRole('button', { name: 'Continue' }).click()
+    })
+
+    await test.step('uk-address-field', async () => {
+      await expect(page).toHaveURL('/example-grant-with-auth/uk-address-field')
+      await expect(page.getByRole('heading', { level: 1 })).toContainText('UkAddressField Example')
+      await page.getByLabel('Address line 1').fill('1 Example Street')
+      await page.getByLabel('Town or city').fill('Exampleton')
+      await page.getByLabel('Postcode').fill('EX1 1EX')
+      await page.getByRole('button', { name: 'Continue' }).click()
+    })
+
+    await test.step('location-components', async () => {
+      await expect(page).toHaveURL('/example-grant-with-auth/location-components')
+      await page.getByLabel('Easting').fill('530000')
+      await page.getByLabel('Northing').fill('180000')
+      await page.getByLabel('OS national grid reference').fill('ST 678 678')
+      await page.getByLabel('National Grid field number').fill('NG 1234 5678')
+      await page.getByLabel('Latitude').fill('51.519450')
+      await page.getByLabel('Longitude').fill('-0.127758')
+      await page.getByLabel('GeospatialField').fill('[{"type":"Feature","properties":{"description":"Example location","coordinateGridReference":"ST 00001","centroidGridReference":"ST 00001"},"geometry":{"coordinates":[-2.5723699109417737,53.2380485215034],"type":"Point"},"id":"a"}]')
+      await page.getByRole('button', { name: 'Continue' }).click()
+    })
+
+    await test.step('hidden-field', async () => {
+      await expect(page).toHaveURL('/example-grant-with-auth/hidden-field')
+      await expect(page.getByRole('heading', { level: 1 })).toContainText('HiddenField Example')
+      await page.getByRole('button', { name: 'Continue' }).click()
+    })
+
+    await test.step('multi-field-form', async () => {
+      await expect(page).toHaveURL('/example-grant-with-auth/multi-field-form')
+      await expect(page.getByRole('heading', { level: 1 })).toContainText('Multi Field Form Example')
+      await page.getByLabel('Project name').fill('Test project')
+      await page.getByLabel('Project description').fill('Project description')
+      await page.getByLabel('Project budget').fill('50000')
+      await page.getByRole('button', { name: 'Continue' }).click()
+    })
+
+    await test.step('repeat-page', async () => {
+      await expect(page).toHaveURL(/\/example-grant-with-auth\/repeat-page/)
+      await expect(page.getByRole('heading', { level: 1 })).toContainText('RepeatPage Example')
+      await page.getByLabel('Item name').fill('Repeat item example')
+      await page.getByLabel('Amount').fill('12000')
+      await page.getByRole('button', { name: 'Continue' }).click()
       await page.getByRole('button', { name: 'Continue' }).click()
     })
 
@@ -94,27 +167,6 @@ test.describe('Smoke test', () => {
       await expect(page).toHaveURL('/example-grant-with-auth/select-land-parcel')
       await expect(page.getByRole('heading', { level: 1 })).toContainText('Select all the eligible land parcels for the location of your woodland')
       await page.getByRole('checkbox', { name: 'SD6351 8781' }).check()
-      await page.getByRole('button', { name: 'Continue' }).click()
-    })
-
-    await test.step('multi-field-form', async () => {
-      await expect(page).toHaveURL('/example-grant-with-auth/multi-field-form')
-      await expect(page.getByRole('heading', { name: 'Multi Field Form Example' })).toBeVisible()
-      await page.getByLabel('Name').fill('James Test-Farmer')
-      await page.getByLabel('Email address').fill('cl-defra-gae-test-applicant-email@equalexperts.com')
-      await page.getByLabel('Mobile number').fill('07777 123456')
-      await page.getByLabel('Address line 1').fill('Test Farm')
-      await page.getByLabel('Address line 2 (optional)').fill('Cogenhoe')
-      await page.getByLabel('Town').fill('Northampton')
-      await page.getByLabel('County (optional)').fill('Northamptonshire')
-      await page.getByLabel('Postcode').fill('NN7 1NN')
-      await page.getByRole('button', { name: 'Continue' }).click()
-    })
-
-    await test.step('check-details', async () => {
-      await expect(page).toHaveURL('/example-grant-with-auth/check-details')
-      await expect(page.getByRole('heading', { level: 1 })).toContainText('Check your details')
-      await page.getByRole('radio', { name: 'Yes' }).click()
       await page.getByRole('button', { name: 'Continue' }).click()
     })
 
