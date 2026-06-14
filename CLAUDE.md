@@ -68,7 +68,7 @@ The backend URL is similarly derived:
 https://grants-ui-backend.${ENVIRONMENT}.cdp-int.defra.cloud
 ```
 
-Triggered via the CDP Portal. The HTML report is published to S3 after the run. Config: `playwright.config.js`.
+Triggered via the CDP Portal. The HTML report is published to S3 after the run. Config: `playwright.cdp.config.js`.
 
 ## npm scripts
 

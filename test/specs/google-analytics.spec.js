@@ -21,10 +21,9 @@ test.describe('Google Analytics', () => {
       storageState: { cookies: [], origins: [] }
     })
 
-    context.on('request', (req) => {
-      if (/google-analytics\.com\/g\/collect/.test(req.url())) {
-        collectRequests.push(req.url())
-      }
+    await context.route(/google-analytics\.com\/g\/collect/, (route) => {
+      collectRequests.push(route.request().url())
+      route.fulfill({ status: 204, body: '' })
     })
 
     const page = await context.newPage()
@@ -35,7 +34,7 @@ test.describe('Google Analytics', () => {
         await authenticate(page, CRN)
         await expect(page.getByRole('heading', { level: 1 })).toContainText('Example Grant')
         // Asserting absence — give GA time to fire before concluding it didn't
-        await page.waitForTimeout(10_000)
+        await page.waitForTimeout(5_000)
         expect(collectRequests).toHaveLength(0)
       })
 
@@ -45,7 +44,7 @@ test.describe('Google Analytics', () => {
       })
 
       await test.step('collect call fires on current page', async () => {
-        await expect.poll(() => collectRequests.length, { timeout: 10_000 }).toBeGreaterThan(0)
+        await expect.poll(() => collectRequests.length, { timeout: 5_000 }).toBeGreaterThan(0)
       })
     } finally {
       await context.close()

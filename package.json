@@ -9,7 +9,7 @@
   "license": "OGL-UK-3.0",
   "type": "module",
   "scripts": {
-    "test": "playwright test --config=playwright.config.js",
+    "test": "playwright test --config=playwright.cdp.config.js",
     "test:local": "playwright test --config=playwright.local.config.js",
     "report:publish": "./bin/publish-tests.sh"
   },

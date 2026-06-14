@@ -7,7 +7,7 @@ export default defineConfig({
   testMatch: '**/*.spec.js',
   timeout: 120_000,
   fullyParallel: false,
-  workers: 1,
+  workers: 2,
   reporter: [['html', { open: 'never', outputFolder: 'playwright-report' }]],
   use: {
     baseURL: `https://grants-ui.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
