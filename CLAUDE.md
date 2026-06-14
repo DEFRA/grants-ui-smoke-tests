@@ -9,6 +9,7 @@ Playwright smoke test suite for `grants-ui`, designed to run on the Defra CDP pl
 
 ## Project policies
 
+- **Smoke tests only** — this suite is a deployment gate, not a regression suite. It runs on CDP Dev on each deploy of `grants-ui` or `grants-ui-backend`. Keep tests focused on the happy path and features that can only be tested in CDP Dev. Conditional journey branches belong in the `grants-ui` acceptance suite.
 - **JavaScript only** — no TypeScript. Defra policy.
 - **No assertions in page objects** — page objects encapsulate navigation and interaction only. Assertions belong in the spec.
 
@@ -102,8 +103,16 @@ The smoke test authenticates via the Defra ID OIDC stub (`fct-defra-id-stub`). T
 2. Fill in CRN + password and submit
 3. Stub redirects back via OIDC to `/auth/sign-in-oidc`
 
-**CRN used:** `1100957269` — **SBI used:** `107593059`  
 **Password:** controlled by `DEFRA_ID_USER_PASSWORD` env var (default: `x`)
+
+### Test users
+
+Each spec uses a dedicated user to avoid state collisions between tests running concurrently or in sequence. When adding a new spec, pick a user that is present in `grants-ui/fcp-defra-id-stub/users.json` and not already used in any of the journey test repos (`grants-ui` acceptance, `woodland-grant-journey-tests`, `land-grants-journey-tests`).
+
+| Spec | CRN | SBI | Name |
+|---|---|---|---|
+| `smoke.spec.js` | `1100957269` | `107593059` | Grace Davies / Davies Livestock |
+| `google-analytics.spec.js` | `1300000002` | `300000002` | Benjamin Carter / Oak Farm |
 
 ## Backend state management
 

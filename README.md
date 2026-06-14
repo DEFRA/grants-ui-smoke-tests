@@ -3,6 +3,8 @@ grants-ui-smoke-tests
 
 Playwright smoke tests for the grants-ui service, running on the CDP platform.
 
+**Purpose:** These are deployment smoke tests. They run automatically on the CDP Dev environment whenever a new version of `grants-ui` or `grants-ui-backend` is deployed, and act as a fast go/no-go gate — verifying the happy path works end-to-end before the release proceeds further, and any feature that can only be tested on CDP Dev. They are not a regression suite; edge cases, accessibility checks, and conditional branches are covered by the full acceptance tests in `grants-ui`.
+
 - [Local](#local-development)
   - [Requirements](#requirements)
   - [Setup](#setup)
