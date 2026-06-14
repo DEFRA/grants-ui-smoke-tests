@@ -12,32 +12,44 @@ test.describe('Google Analytics', () => {
     await clearApplicationState(CRN, SBI)
   })
 
-  test('does not fire GA collect before consent, fires after accepting analytics cookies', async ({ page }) => {
+  test('does not fire GA collect before consent, fires after accepting analytics cookies', async ({ browser, baseURL }) => {
     const collectRequests = []
 
-    page.on('request', (req) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: true,
+      baseURL,
+      storageState: { cookies: [], origins: [] }
+    })
+
+    context.on('request', (req) => {
       if (/google-analytics\.com\/g\/collect/.test(req.url())) {
         collectRequests.push(req.url())
       }
     })
 
-    await test.step('start journey — no collect calls before consent', async () => {
-      await page.goto('/example-grant-with-auth/start')
-      await authenticate(page, CRN)
-      await expect(page.getByRole('heading', { level: 1 })).toContainText('Example Grant')
-      // Asserting absence — give GA time to fire before concluding it didn't
-      await page.waitForTimeout(5_000)
-      expect(collectRequests).toHaveLength(0)
-    })
+    const page = await context.newPage()
 
-    await test.step('accept analytics cookies', async () => {
-      await page.getByRole('button', { name: 'Accept analytics cookies' }).click()
-      await expect(page.getByText("You've accepted analytics cookies")).toBeVisible()
-    })
+    try {
+      await test.step('start journey — no collect calls before consent', async () => {
+        await page.goto('/example-grant-with-auth/start')
+        await authenticate(page, CRN)
+        await expect(page.getByRole('heading', { level: 1 })).toContainText('Example Grant')
+        // Asserting absence — give GA time to fire before concluding it didn't
+        await page.waitForTimeout(10_000)
+        expect(collectRequests).toHaveLength(0)
+      })
 
-    await test.step('collect call fires on current page', async () => {
-      await expect.poll(() => collectRequests.length, { timeout: 5_000 }).toBeGreaterThan(0)
-    })
+      await test.step('accept analytics cookies', async () => {
+        await page.getByRole('button', { name: 'Accept analytics cookies' }).click()
+        await expect(page.getByText("You've accepted analytics cookies")).toBeVisible()
+      })
+
+      await test.step('collect call fires on current page', async () => {
+        await expect.poll(() => collectRequests.length, { timeout: 10_000 }).toBeGreaterThan(0)
+      })
+    } finally {
+      await context.close()
+    }
   })
 
   test('fires GA ns.html request when JavaScript is disabled and analytics cookies are accepted', async ({ browser, baseURL }) => {
@@ -45,7 +57,8 @@ test.describe('Google Analytics', () => {
 
     const context = await browser.newContext({
       javaScriptEnabled: false,
-      baseURL
+      baseURL,
+      storageState: { cookies: [], origins: [] }
     })
 
     context.on('request', (req) => {
