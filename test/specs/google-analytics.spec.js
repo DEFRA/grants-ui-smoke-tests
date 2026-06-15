@@ -5,6 +5,10 @@ import { clearApplicationState } from '../utils/backend.js'
 const CRN = '1300000002'
 const SBI = '300000002'
 
+const browserProxyOptions = {
+  ...(process.env.CDP_HTTPS_PROXY && { proxy: { server: process.env.CDP_HTTPS_PROXY } })
+}
+
 test.describe.configure({ mode: 'serial' })
 
 test.describe('Google Analytics', () => {
@@ -18,7 +22,8 @@ test.describe('Google Analytics', () => {
     const context = await browser.newContext({
       javaScriptEnabled: true,
       baseURL,
-      storageState: { cookies: [], origins: [] }
+      storageState: { cookies: [], origins: [] },
+      ...browserProxyOptions
     })
 
     await context.route(/google-analytics\.com\/g\/collect/, (route) => {
@@ -57,7 +62,8 @@ test.describe('Google Analytics', () => {
     const context = await browser.newContext({
       javaScriptEnabled: false,
       baseURL,
-      storageState: { cookies: [], origins: [] }
+      storageState: { cookies: [], origins: [] },
+      ...browserProxyOptions
     })
 
     context.on('request', (req) => {
