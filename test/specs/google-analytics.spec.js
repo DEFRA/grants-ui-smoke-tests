@@ -6,7 +6,7 @@ const CRN = '1300000002'
 const SBI = '300000002'
 
 const browserProxyOptions = {
-  ...(process.env.CDP_HTTPS_PROXY && { proxy: { server: process.env.CDP_HTTPS_PROXY } })
+  proxy: { server: 'http://localhost:3128' }
 }
 
 test.describe.configure({ mode: 'serial' })
