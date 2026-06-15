@@ -26,12 +26,27 @@ test.describe('Google Analytics', () => {
       ...browserProxyOptions
     })
 
+    const allRequests = []
+
     await context.route(/google-analytics\.com\/g\/collect/, (route) => {
       collectRequests.push(route.request().url())
       route.fulfill({ status: 204, body: '' })
     })
 
+    context.on('request', (req) => {
+      if (req.url().includes('googletagmanager.com') || req.url().includes('google-analytics.com')) {
+        allRequests.push(`REQ: ${req.url()}`)
+      }
+    })
+
+    context.on('requestfailed', (req) => {
+      allRequests.push(`FAIL: ${req.url()} — ${req.failure()?.errorText}`)
+    })
+
     const page = await context.newPage()
+
+    page.on('console', (msg) => console.log('BROWSER:', msg.type(), msg.text()))
+    page.on('pageerror', (err) => console.log('PAGE ERROR:', err.message))
 
     try {
       await test.step('start journey — no collect calls before consent', async () => {
@@ -40,6 +55,7 @@ test.describe('Google Analytics', () => {
         await expect(page.getByRole('heading', { level: 1 })).toContainText('Example Grant')
         // Asserting absence — give GA time to fire before concluding it didn't
         await page.waitForTimeout(5_000)
+        console.log('GA/GTM requests before consent:', allRequests)
         expect(collectRequests).toHaveLength(0)
       })
 
@@ -49,7 +65,11 @@ test.describe('Google Analytics', () => {
       })
 
       await test.step('collect call fires on current page', async () => {
-        await expect.poll(() => collectRequests.length, { timeout: 5_000 }).toBeGreaterThan(0)
+        await expect.poll(() => {
+          console.log('GA/GTM requests so far:', allRequests)
+          console.log('collect requests so far:', collectRequests)
+          return collectRequests.length
+        }, { timeout: 5_000 }).toBeGreaterThan(0)
       })
     } finally {
       await context.close()
