@@ -17,7 +17,12 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: {
+        ...devices['Desktop Chrome'],
+        proxy: {
+          server: 'http://localhost:3128'
+        }
+      }
     }
   ]
 })
