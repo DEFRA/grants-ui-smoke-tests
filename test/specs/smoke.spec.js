@@ -13,7 +13,7 @@ test.describe('Smoke test', () => {
     await clearApplicationState(CRN, SBI)
   })
 
-  test('completes a full example-grant-with-auth journey to submission', async ({ page }) => {
+  test('completes a full example-grant-with-auth journey to submission @cdp', async ({ page }) => {
     await test.step('start', async () => {
       await page.goto('/example-grant-with-auth/start')
       await authenticate(page, CRN)
