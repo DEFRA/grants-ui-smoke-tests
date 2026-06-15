@@ -21,6 +21,9 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         proxy: {
           server: 'http://localhost:3128'
+        },
+        launchOptions: {
+          args: ['--disable-http2']
         }
       }
     }
