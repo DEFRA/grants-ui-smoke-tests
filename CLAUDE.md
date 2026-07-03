@@ -112,7 +112,6 @@ Each spec uses a dedicated user to avoid state collisions between tests running 
 | Spec | CRN | SBI | Name |
 |---|---|---|---|
 | `smoke.spec.js` | `1100957269` | `107593059` | Grace Davies / Davies Livestock |
-| `google-analytics.spec.js` | `1300000002` | `300000002` | Benjamin Carter / Oak Farm |
 
 ## Backend state management
 
