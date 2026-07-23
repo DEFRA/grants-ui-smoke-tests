@@ -1,16 +1,17 @@
 import { test, expect } from '@playwright/test'
 import { authenticate } from '../utils/auth.js'
-import { clearApplicationState } from '../utils/backend.js'
+import { clearApplicationData } from '../utils/backend.js'
 import { AutocompleteField } from '../page-objects/autocomplete-field.js'
 import { DatePartsField } from '../page-objects/date-parts-field.js'
 import { MonthYearField } from '../page-objects/month-year-field.js'
 
 const CRN = '1100957269'
 const SBI = '107593059'
+const GRANT_CODE = 'example-grant-with-auth'
 
 test.describe('Smoke test', () => {
   test.beforeEach(async () => {
-    await clearApplicationState(CRN, SBI)
+    await clearApplicationData(SBI, GRANT_CODE)
   })
 
   test('completes a full example-grant-with-auth journey to submission', async ({ page }) => {
