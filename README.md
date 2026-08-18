@@ -50,6 +50,8 @@ Tests are run from the CDP Portal under the Test Suites section. A new image is 
 
 The `entrypoint.sh` script runs `npm test`, publishes the Playwright HTML report to S3, and exits with code 1 if any tests failed (signalled via a `FAILED` file).
 
+Runs in Microsoft Edge (Playwright's `msedge` channel).
+
 ## Licence
 
 THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at:

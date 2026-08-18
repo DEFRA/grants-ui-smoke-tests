@@ -135,7 +135,7 @@ Before each test, `clearApplicationData()` calls `DELETE /admin/test-data` on `g
 
 ## Docker
 
-The `Dockerfile` installs Playwright's Chromium with system dependencies. The `entrypoint.sh` runs `npm test` by default.
+The `Dockerfile` installs Playwright's Microsoft Edge (`msedge` channel) with system dependencies. The `entrypoint.sh` runs `npm test` by default.
 
 ## GitHub Actions
 

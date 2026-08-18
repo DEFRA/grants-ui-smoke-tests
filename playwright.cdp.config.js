@@ -16,16 +16,8 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        proxy: {
-          server: 'http://localhost:3128'
-        },
-        launchOptions: {
-          args: ['--disable-http2']
-        }
-      }
+      name: 'msedge',
+      use: { ...devices['Desktop Edge'], channel: 'msedge' }
     }
   ]
 })

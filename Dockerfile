@@ -20,7 +20,7 @@ WORKDIR /app
 
 COPY . .
 RUN npm ci
-RUN npx playwright install --with-deps chromium
+RUN npx playwright install --with-deps msedge
 
 ENTRYPOINT [ "./entrypoint.sh" ]
 
