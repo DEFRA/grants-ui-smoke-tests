@@ -4,6 +4,7 @@ import { clearApplicationData } from '../utils/backend.js'
 import { AutocompleteField } from '../page-objects/autocomplete-field.js'
 import { DatePartsField } from '../page-objects/date-parts-field.js'
 import { MonthYearField } from '../page-objects/month-year-field.js'
+import { GeospatialField } from '../page-objects/geospatial-field.js'
 
 const CRN = '1100957269'
 const SBI = '107593059'
@@ -136,7 +137,8 @@ test.describe('Smoke test', () => {
       await page.getByLabel('National Grid field number').fill('NG 1234 5678')
       await page.getByLabel('Latitude').fill('51.519450')
       await page.getByLabel('Longitude').fill('-0.127758')
-      await page.getByLabel('GeospatialField').fill('[{"type":"Feature","properties":{"description":"Example location","coordinateGridReference":"ST 00001","centroidGridReference":"ST 00001"},"geometry":{"coordinates":[-2.5723699109417737,53.2380485215034],"type":"Point"},"id":"a"}]')
+      const geospatialField = new GeospatialField(page, 'geospatialField')
+      await geospatialField.fill('[{"type":"Feature","properties":{"description":"Example location","coordinateGridReference":"ST 00001","centroidGridReference":"ST 00001"},"geometry":{"coordinates":[-2.5723699109417737,53.2380485215034],"type":"Point"},"id":"a"}]')
       await page.getByRole('button', { name: 'Continue' }).click()
     })
 
